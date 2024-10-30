@@ -1,0 +1,465 @@
+\documentclass[10pt, letterpaper]{article}
+
+% Packages 
+% {
+\usepackage[
+    ignoreheadfoot, % set margins without considering header and footer
+    top=2 cm, % seperation between body and page edge from the top
+    bottom=2 cm, % seperation between body and page edge from the bottom
+    left=2 cm, % seperation between body and page edge from the left
+    right=2 cm, % seperation between body and page edge from the right
+    footskip=1.0 cm, % seperation between body and footer
+    % showframe % for debugging 
+]{geometry} % for adjusting page geometry
+\usepackage{titlesec} % for customizing section titles
+\usepackage{tabularx} % for making tables with fixed width columns
+\usepackage{array} % tabularx requires this
+\usepackage[dvipsnames]{xcolor} % for coloring text
+\definecolor{primaryColor}{RGB}{0, 0, 0} % define primary color
+\usepackage{enumitem} % for customizing lists
+\usepackage{fontawesome5} % for using icons
+\usepackage{amsmath} % for math
+\usepackage[
+    pdftitle={John Doe's CV},
+    pdfauthor={John Doe},
+    pdfcreator={LaTeX with RenderCV},
+    colorlinks=true,
+    urlcolor=primaryColor
+]{hyperref} % for links, metadata and bookmarks
+\usepackage[pscoord]{eso-pic} % for floating text on the page
+\usepackage{calc} % for calculating lengths
+\usepackage{bookmark} % for bookmarks
+\usepackage{lastpage} % for getting the total number of pages
+\usepackage{changepage} % for one column entries (adjustwidth environment)
+\usepackage{paracol} % for two and three column entries
+\usepackage{ifthen} % for conditional statements
+\usepackage{needspace} % for avoiding page brake right after the section title
+\usepackage{iftex} % check if engine is pdflatex, xetex or luatex
+
+% Ensure that generate pdf is machine readable/ATS parsable:
+\ifPDFTeX
+    \input{glyphtounicode}
+    \pdfgentounicode=1
+    \usepackage[T1]{fontenc}
+    \usepackage[utf8]{inputenc}
+    \usepackage{lmodern}
+\fi
+
+\usepackage{charter}
+% }
+% Settings:
+% { 
+\raggedright
+\AtBeginEnvironment{adjustwidth}{\partopsep0pt} % remove space before adjustwidth environment
+\pagestyle{empty} % no header or footer
+\setcounter{secnumdepth}{0} % no section numbering
+\setlength{\parindent}{0pt} % no indentation
+\setlength{\topskip}{0pt} % no top skip
+\setlength{\columnsep}{0.15cm} % set column seperation
+\pagenumbering{gobble} % no page numbering
+
+\titleformat{\section}{\needspace{4\baselineskip}\bfseries\large}{}{0pt}{}[\vspace{1pt}\titlerule]
+
+\titlespacing{\section}{
+    % left space:
+    -1pt
+}{
+    % top space:
+    0.3 cm
+}{
+    % bottom space:
+    0.2 cm
+} % section title spacing
+
+\renewcommand\labelitemi{$\vcenter{\hbox{\small$\bullet$}}$} % custom bullet points
+\newenvironment{highlights}{
+    \begin{itemize}[
+        topsep=0.10 cm,
+        parsep=0.10 cm,
+        partopsep=0pt,
+        itemsep=0pt,
+        leftmargin=0 cm + 10pt
+    ]
+}{
+    \end{itemize}
+} % new environment for highlights
+
+\newenvironment{highlightsforbulletentries}{
+    \begin{itemize}[
+        topsep=0.10 cm,
+        parsep=0.10 cm,
+        partopsep=0pt,
+        itemsep=0pt,
+        leftmargin=10pt
+    ]
+}{
+    \end{itemize}
+} % new environment for highlights for bullet entries
+
+\newenvironment{onecolentry}{
+    \begin{adjustwidth}{
+        0 cm + 0.00001 cm
+    }{
+        0 cm + 0.00001 cm
+    }
+}{
+    \end{adjustwidth}
+} % new environment for one column entries
+
+\newenvironment{twocolentry}[2][]{
+    \onecolentry
+    \def\secondColumn{#2}
+    \setcolumnwidth{\fill, 4.5 cm}
+    \begin{paracol}{2}
+}{
+    \switchcolumn \raggedleft \secondColumn
+    \end{paracol}
+    \endonecolentry
+} % new environment for two column entries
+
+\newenvironment{threecolentry}[3][]{
+    \onecolentry
+    \def\thirdColumn{#3}
+    \setcolumnwidth{, \fill, 4.5 cm}
+    \begin{paracol}{3}
+    {\raggedright #2} \switchcolumn
+}{
+    \switchcolumn \raggedleft \thirdColumn
+    \end{paracol}
+    \endonecolentry
+} % new environment for three column entries
+
+\newenvironment{header}{
+    \setlength{\topsep}{0pt}\par\kern\topsep\centering\linespread{1.5}
+}{
+    \par\kern\topsep
+} % new environment for the header
+
+\newcommand{\placelastupdatedtext}{% \placetextbox{<horizontal pos>}{<vertical pos>}{<stuff>}
+  \AddToShipoutPictureFG*{% Add <stuff> to current page foreground
+    \put(
+        \LenToUnit{\paperwidth-2 cm-0 cm+0.05cm},
+        \LenToUnit{\paperheight-1.0 cm}
+    ){\vtop{{\null}\makebox[0pt][c]{
+        \small\color{gray}\textit{Last updated in September 2024}\hspace{\widthof{Last updated in September 2024}}
+    }}}%
+  }%
+}%
+
+% save the original href command in a new command:
+\let\hrefWithoutArrow\href
+% }
+
+\begin{document}
+    \newcommand{\AND}{\unskip
+        \cleaders\copy\ANDbox\hskip\wd\ANDbox
+        \ignorespaces
+    }
+    \newsavebox\ANDbox
+    \sbox\ANDbox{$|$}
+
+    \begin{header}
+        \fontsize{14 pt}{14 pt}\selectfont Alexander Grabowski
+
+        \vspace{5 pt}
+
+        \normalsize
+        \mbox{Madison, WI}%
+        \kern 5.0 pt%
+        \AND%
+        \kern 5.0 pt%
+        \mbox{\hrefWithoutArrow{mailto:ajgrabowski@wisc.edu}{ajgrabowski@wisc.edu}}%
+        \kern 5.0 pt%
+        \AND%
+        \kern 5.0 pt%
+        \mbox{\hrefWithoutArrow{https://xangrab.com}{xangrab.com}}%
+        \kern 5.0 pt%
+        \AND%
+        \kern 5.0 pt%
+        \mbox{\hrefWithoutArrow{https://www.linkedin.com/in/alexander-xander-grabowski-8164481a1/}{linkedin.com/in/alexander-xander-grabowski-8164481a1}}%
+        \kern 5.0 pt%
+        \AND%
+        \kern 5.0 pt%
+        \mbox{\hrefWithoutArrow{https://github.com/XanGrab}{github.com/XanGrab}}%
+    \end{header}
+
+    \vspace{5 pt - 0.3 cm}
+    
+    \section{Education}
+        % Entry 1
+        %{
+        \begin{twocolentry}{
+            Sept 2024 – 
+        }
+        \textbf{M.S. in Curriculum and Instruction}, University of Wisconsin—Madison
+        \end{twocolentry}
+        \begin{onecolentry}
+            \begin{highlights}
+                \textit{Focus:} Design, Informal, Creative, Education
+            \end{highlights}
+        \end{onecolentry}
+        % }
+        
+        \vspace{0.2 cm}
+        
+        % Entry 2
+        %{
+        \begin{twocolentry}{
+            Sept 2023 – Aug 2024
+        }
+        \textbf{Capstone Certificate in UX Design}, University of Wisconsin—Madison
+        \end{twocolentry}
+        \begin{onecolentry}
+            \begin{highlights}
+                \textit{Focus:} Games User Research \& Design
+            \end{highlights}
+        \end{onecolentry}
+        % }
+        
+        \vspace{0.2 cm}
+
+        % Entry 3
+        %{
+        \begin{twocolentry}{
+            Sept 2019 – May 2023
+        }
+        \textbf{Bachelor of Arts in Computer Science}, University of Wisconsin—Madison
+        \end{twocolentry}
+        \begin{onecolentry}
+            \begin{highlights}
+                \textit{Certification (Minors):} Software Engineering, Game Development, Digital Art, Japanese Communication
+            \end{highlights}
+        \end{onecolentry}
+        % }
+
+    \section{Development Experience}
+
+        % Entry
+        % { 
+        \begin{twocolentry}{
+            Oct 2024 – 
+        }
+            \textbf{Design Intern}, Field Day Learning Games -- Madison, WI\end{twocolentry}
+
+        \vspace{0.10 cm}
+        \begin{onecolentry}
+            \begin{highlights}
+                \item Development of home website's front-end and content management features
+                \item Implementation of the content management system and quality assurance testing for incoming games in the \textbf{\textit{Vault}} game library
+            \end{highlights}
+        \end{onecolentry}
+        % }
+
+        \vspace{0.2 cm}
+
+        % Entry
+        % { 
+        \begin{twocolentry}{
+            Jan 2022 – May 2023
+        }
+            \textbf{Software Engineering Intern}, Field Day Learning Games -- Madison, WI
+        \end{twocolentry}
+
+        \vspace{0.10 cm}
+        \begin{onecolentry}
+            \begin{highlights}
+                \item Development of core gameplay mechanics and features in games such as \textbf{\textit{Wake}} and unreleased titles
+                \item Implementation of continuous integration and delivery systems for games using GitHub Actions 
+                \item Quality assurance testing for in-game quests and data validation 
+            \end{highlights}
+        \end{onecolentry}
+        % }
+
+        \vspace{0.2 cm}
+    
+    \section{Informal Instruction}
+        % Entry
+        % { 
+        \begin{twocolentry}{
+            Aug 2024 – 
+        }
+            \textbf{Student Technology Trainer}, UW—Madison: Division of Information Technology (DoIT)
+            \end{twocolentry}
+
+        \vspace{0.10 cm}
+        \begin{onecolentry}
+            \begin{highlights}
+                \item Expanded the instructional content areas to include new workshops and training manuals for game development technologies such as Godot, Unity, and Figma
+                \item Developed existing programming materials in Python, JavaScript, and C\# by creating new project-based exercises that increased student engagement and turnout
+            \end{highlights}
+        \end{onecolentry}
+        % }
+
+        \vspace{0.2 cm}
+        
+        % Entry
+        % { 
+        \begin{twocolentry}{
+            Jun 2024 – Aug 2024
+        }
+            \textbf{Game Development Instructor}, Maydm Inc -- Madison, WI\end{twocolentry}
+
+        \vspace{0.10 cm}
+        \begin{onecolentry}
+            \begin{highlights}
+                \item Developed introductory programming curriculum for secondary students ages 10+ focused on conditional logic, object-oriented programming, and simple game loops using C\# the Unity game engine
+                \item Taught various hard technical skills including visual asset creation, rapid digital and paper prototyping, and multi-platform publishing using game engines.
+                \item Introduced students to software development concepts within an iterative design process that emphasized the integration of player feedback and collaboration
+            \end{highlights}
+        \end{onecolentry}
+        % }
+
+        \vspace{0.2 cm}
+
+        % Entry
+        % { 
+        \begin{twocolentry}{
+            Nov 2020 – Jun 2022
+        }
+            \textbf{Head Programming Instructor}, Code Ninjas -- Sun Prairie, WI
+        \end{twocolentry}
+
+        \vspace{0.10 cm}
+        \begin{onecolentry}
+            \begin{highlights}
+                \item Couched youth Fortnite esports team to compete in XPLeague’s North American Finals in 2022.
+                \item Developed introductory game development and programming curriculum including materials in JavaScript, Roblox Studio (Lua), and the Unity game engine.
+                \item Taught various principles of STEM and IT to a diverse range of kids ages K-12 which included project-based lessons in Scratch and MakeCode Arcade.
+            \end{highlights}
+        \end{onecolentry}
+        % }
+
+    \pagebreak
+    \section{Publications}
+        
+        \begin{samepage}
+            \begin{twocolentry}{
+                May 20XX
+            }
+                \textbf{Probably like a Masters thesis title here?}
+            \end{twocolentry}
+
+            \vspace{0.10 cm}
+            
+            \begin{onecolentry}
+                \mbox{\textbf{\textit{Alexander Grabowski}}}, \mbox{John Doe}, \mbox{Frodo Baggins}
+
+                \vspace{0.10 cm}
+                
+        \href{https://doi.org/here}{put.doi.here}
+        \end{onecolentry}
+        \end{samepage}
+    
+    \section{Projects}
+        % Entry
+        % { 
+        \begin{twocolentry}
+        {
+            \href{https://www.vault.fielddaylab.wisc.edu/}{www.vault.fielddaylab.wisc.edu}
+        }   
+        \textbf{Vault Learning Library} \newline
+            \hspace{0.2 cm} \textit{Tools Used:} Squarespace, JavaScript code injection, Google Workspace Suite
+        \end{twocolentry}
+
+        \vspace{0.10 cm}
+        \begin{onecolentry}
+            \begin{highlights}
+                \item Guided and managed interns in the process of creating and managing the content in Squarespace 
+                \item Implementation of a web form for game studios to publish their educational game on the site
+            \end{highlights}
+        \end{onecolentry}
+        % }
+
+        \vspace{0.2 cm}
+
+        % Entry
+        % { 
+        \begin{twocolentry}
+        {
+            \href{https://github.com/fielddaylab/wake}{github.com/fielddaylab/wake}
+        }   
+        \textbf{Wake: Tales from the Aqualab} \newline
+            \hspace{0.2 cm} \textit{Tools Used:} Unity Game Engine, C\#, Firebase, in-house scripting languages
+        \end{twocolentry}
+
+        \vspace{0.10 cm}
+        \begin{onecolentry}
+            \begin{highlights}
+                \item Implementation of the modeling features, dialogue, quests, and data analytics of the game
+                \item Implementation of user interfaces in Unity 3D and traditional HTML5-Web environments for 2D games
+            \end{highlights}
+        \end{onecolentry}
+        % }
+
+        \vspace{0.2 cm}
+
+        % Entry
+        % { 
+        \begin{twocolentry}{
+            \href{https://github.com/opengamedata/opengamedata-js-log}{github.com/opengamedata}
+        }
+            \textbf{Open Game Data: JavaScript Client Logging Package} \newline
+            \hspace{0.2 cm} \textit{Tools Used:} JavaScript, Node.js, Firebase
+        \end{twocolentry}
+
+        \vspace{0.10 cm}
+        \begin{onecolentry}
+            \begin{highlights}
+                \item Developed a Node.js service package for logging data in web games with OpenGameData's servers.
+            \end{highlights}
+        \end{onecolentry}
+        % }
+
+        \vspace{0.2 cm}
+
+    
+    \section{Technologies}
+
+        \textbf{Game Engines}
+        
+        \begin{onecolentry}
+            \begin{itemize}
+                \item Unity
+                \item Godot
+                \item Phaser HTML5 framework
+            \end{itemize}
+        \end{onecolentry}
+        
+        \vspace{0.2 cm}
+        
+        \textbf{Vector Illustration Programs}
+        
+        \begin{onecolentry}
+            \begin{itemize}
+                \item Figma
+                \item Adobe Illustrator 
+                \item Inkscape
+            \end{itemize}
+        \end{onecolentry}
+        
+        \vspace{0.2 cm}
+        
+        \textbf{JavaScript Web Libraries}
+        
+        \begin{onecolentry}
+            \begin{itemize}
+                \item Node.js runtime ecosystem (npm, webpack, etc)
+                \item Graphics rendering libraries (pixi.js, THREE.js, etc)
+            \end{itemize}
+        \end{onecolentry}
+        
+        \vspace{0.2 cm}
+        
+        \textbf{Web Development/Publishing Platforms}
+        
+        \begin{onecolentry}
+            \begin{itemize}
+                \item Hugo static web framework and CMS
+                \item Wordpress blog and publishing tool
+                \item Squarespace website publishing tools
+            \end{itemize}
+        \end{onecolentry}
+        
+        \vspace{0.2 cm}
+        
+\end{document}
